@@ -667,13 +667,13 @@ section {
 
 .social-links {
     display: flex;
-    gap: 1rem;
+    gap: 1.5rem;
     margin-top: 2rem;
 }
 
 .social-link {
-    width: 45px;
-    height: 45px;
+    width: 65px;
+    height: 65px;
     background: var(--bg-primary);
     color: var(--primary-color);
     border-radius: 50%;
@@ -682,6 +682,7 @@ section {
     justify-content: center;
     transition: var(--transition);
     border: 2px solid var(--border-color);
+    font-size: 1.5rem;
 }
 
 .social-link:hover {
@@ -948,6 +949,31 @@ textarea:focus,
         --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.3);
         --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.3);
         --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Social media buttons for larger screens */
+@media (min-width: 1200px) {
+    .social-link {
+        width: 75px;
+        height: 75px;
+        font-size: 1.75rem;
+    }
+    
+    .social-links {
+        gap: 1.75rem;
+    }
+}
+
+@media (min-width: 1600px) {
+    .social-link {
+        width: 85px;
+        height: 85px;
+        font-size: 2rem;
+    }
+    
+    .social-links {
+        gap: 2rem;
     }
 }
 
