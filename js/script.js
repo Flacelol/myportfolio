@@ -116,6 +116,11 @@ window.addEventListener('scroll', () => {
     updateNavbarBackground();
 });
 
+// Initialize EmailJS
+(function() {
+    emailjs.init('mQ7rD4M2WEAjG89N_');
+})();
+
 // Contact Form Handling
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
@@ -139,13 +144,26 @@ if (contactForm) {
             return;
         }
         
-        // Simulate form submission (replace with actual form handling)
+        // Send email using EmailJS
         showNotification('Sending message...', 'info');
         
-        setTimeout(() => {
-            showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
-            contactForm.reset();
-        }, 2000);
+        const templateParams = {
+            from_name: name,
+            from_email: email,
+            subject: subject,
+            message: message
+        };
+        
+        emailjs.send('service_bbmu5rn', 'template_obnpoks', templateParams)
+            .then((response) => {
+                console.log('SUCCESS!', response.status, response.text);
+                showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+                contactForm.reset();
+            })
+            .catch((error) => {
+                console.error('FAILED...', error);
+                showNotification('Failed to send message. Please try again later.', 'error');
+            });
     });
 }
 
