@@ -263,8 +263,8 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe elements for animation
-const animateElements = document.querySelectorAll('.portfolio-item, .contact-item, .about-content');
+// Observe elements for animation (excluding about-content to let CSS animations work)
+const animateElements = document.querySelectorAll('.portfolio-item, .contact-item');
 animateElements.forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(30px)';
@@ -411,7 +411,7 @@ const sectionObserver = new IntersectionObserver(revealSection, {
     threshold: 0.15
 });
 
-const sections = document.querySelectorAll('section');
+const sections = document.querySelectorAll('section:not(.about)');
 sections.forEach(section => {
     section.classList.add('section-hidden');
     sectionObserver.observe(section);
@@ -507,6 +507,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize scroll animations
     initScrollAnimations();
+    
+    // Initialize all animations
+    // initAboutAnimations(); // Disabled to let CSS animations work
+    initContactAnimations();
+    addSparkleStyles();
     
     console.log('Portfolio website initialized successfully!');
 });
@@ -624,6 +629,195 @@ function initScrollAnimations() {
             }, 300 + index * 200);
         });
     }
+}
+
+// Enhanced scroll animations for About section
+function initAboutAnimations() {
+    const aboutSection = document.querySelector('.about');
+    const aboutText = document.querySelector('.about-text');
+    const skillTags = document.querySelectorAll('.skill-tag');
+    const aboutDescriptions = document.querySelectorAll('.about-description');
+    
+    if (!aboutSection) return;
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Trigger about text animations
+                if (aboutText) {
+                    aboutText.style.animationPlayState = 'running';
+                }
+                
+                // Stagger skill tag animations
+                skillTags.forEach((tag, index) => {
+                    setTimeout(() => {
+                        tag.style.animationPlayState = 'running';
+                        tag.classList.add('animate-in');
+                    }, index * 100);
+                });
+                
+                // Add floating effect to descriptions
+                aboutDescriptions.forEach((desc, index) => {
+                    setTimeout(() => {
+                        desc.style.animation = 'floatText 3s ease-in-out infinite';
+                        desc.style.animationDelay = `${index * 0.5}s`;
+                    }, 500);
+                });
+            }
+        });
+    }, {
+        threshold: 0.3
+    });
+    
+    observer.observe(aboutSection);
+}
+
+// Enhanced contact section animations
+function initContactAnimations() {
+    const contactSection = document.querySelector('.contact');
+    const contactItems = document.querySelectorAll('.contact-item');
+    const contactForm = document.querySelector('.contact-form');
+    const formInputs = document.querySelectorAll('.form-group input, .form-group textarea');
+    
+    if (!contactSection) return;
+    
+    // Create floating particles
+    createContactParticles();
+    
+    // Scroll-triggered animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Stagger contact items animation
+                contactItems.forEach((item, index) => {
+                    setTimeout(() => {
+                        item.style.animationPlayState = 'running';
+                        item.classList.add('animate-in');
+                    }, index * 200);
+                });
+                
+                // Trigger form animation
+                if (contactForm) {
+                    setTimeout(() => {
+                        contactForm.style.animationPlayState = 'running';
+                        contactForm.classList.add('animate-in');
+                    }, 400);
+                }
+            }
+        });
+    }, {
+        threshold: 0.2
+    });
+    
+    observer.observe(contactSection);
+    
+    // Enhanced form interactions
+    formInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+            createInputSparkles(this);
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.value) {
+                this.parentElement.classList.add('has-content');
+            } else {
+                this.parentElement.classList.remove('has-content');
+            }
+        });
+    });
+}
+
+// Create floating particles for contact section
+function createContactParticles() {
+    const contactSection = document.querySelector('.contact');
+    if (!contactSection) return;
+    
+    const particleCount = 9;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${10 + (i * 10)}%`;
+        particle.style.animationDelay = `${-i * 2}s`;
+        contactSection.appendChild(particle);
+    }
+}
+
+// Create sparkle effect on input focus
+function createInputSparkles(input) {
+    const rect = input.getBoundingClientRect();
+    const sparkleCount = 5;
+    
+    for (let i = 0; i < sparkleCount; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'input-sparkle';
+        sparkle.style.cssText = `
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            left: ${rect.left + Math.random() * rect.width}px;
+            top: ${rect.top + Math.random() * rect.height}px;
+            animation: sparkleFloat 1s ease-out forwards;
+        `;
+        
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => {
+            sparkle.remove();
+        }, 1000);
+    }
+}
+
+// Add sparkle animation CSS
+function addSparkleStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-40px) scale(0);
+            }
+        }
+        
+        .form-group.focused::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius);
+            opacity: 0.1;
+            z-index: -1;
+            animation: focusGlow 0.3s ease;
+        }
+        
+        @keyframes focusGlow {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 0.1; transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 // Error handling for missing elements
