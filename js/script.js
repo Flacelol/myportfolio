@@ -583,11 +583,47 @@ function initScrollAnimations() {
             if (entry.isIntersecting) {
                 entry.target.style.opacity = '1';
                 entry.target.style.transform = 'translateY(0) scale(1)';
+                
+                // Special handling for About section
+                if (entry.target.classList.contains('about')) {
+                    triggerAboutAnimations();
+                }
             }
         });
     }, observerOptions);
     
     elements.forEach(el => scrollObserver.observe(el));
+    
+    // Enhanced About section animations
+    function triggerAboutAnimations() {
+        const aboutText = document.querySelector('.about-text');
+        const skillTags = document.querySelectorAll('.skill-tag');
+        const aboutDescriptions = document.querySelectorAll('.about-description');
+        
+        if (aboutText) {
+            aboutText.style.animation = 'none';
+            aboutText.offsetHeight; // Trigger reflow
+            aboutText.style.animation = 'fadeInUp 1s ease-out forwards';
+        }
+        
+        // Stagger skill tag animations
+        skillTags.forEach((tag, index) => {
+            tag.style.animation = 'none';
+            tag.style.opacity = '0';
+            tag.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                tag.style.animation = `skillAppear 0.6s ease-out ${1.3 + index * 0.1}s forwards`;
+            }, 100);
+        });
+        
+        // Add floating effect to descriptions
+        aboutDescriptions.forEach((desc, index) => {
+            setTimeout(() => {
+                desc.style.animation = `slideInLeft 1s ease-out forwards, floatText 4s ease-in-out ${2 + index}s infinite`;
+            }, 300 + index * 200);
+        });
+    }
 }
 
 // Error handling for missing elements
