@@ -719,6 +719,7 @@ section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
+    align-items: stretch;
 }
 
 .portfolio-item-link {
@@ -734,6 +735,9 @@ section {
     box-shadow: var(--shadow-light);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .portfolio-item::before {
@@ -832,6 +836,9 @@ section {
 
 .portfolio-content {
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .portfolio-title {
@@ -845,6 +852,7 @@ section {
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
     line-height: 1.6;
+    flex-grow: 1;
 }
 
 .portfolio-tags {
@@ -1879,4 +1887,22 @@ textarea:focus,
     * {
         box-shadow: none !important;
     }
+}
+
+.portfolio-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: auto;
+}
+
+.tag {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    height: fit-content;
 }
