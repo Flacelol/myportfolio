@@ -1906,3 +1906,24 @@ textarea:focus,
     font-weight: 500;
     height: fit-content;
 }
+
+.portfolio-review-image {
+    margin: 0.5rem 0 1rem 0;
+    text-align: center;
+}
+
+.review-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 8px;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(37, 99, 235, 0.15),
+        0 0 0 1px rgba(37, 99, 235, 0.1);
+}
