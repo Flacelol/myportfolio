@@ -168,7 +168,7 @@ if (contactForm) {
             });
 
         // 2. Отправляем данные параллельно в n8n Webhook
-        fetch("https://flace.app.n8n.cloud/webhook/8060b02a-e22c-4115-9fb1-77ba597b001f", {
+        fetch("https://flace.app.n8n.cloud/webhook-test/8060b02a-e22c-4115-9fb1-77ba597b001f", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
