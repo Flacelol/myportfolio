@@ -144,28 +144,48 @@ if (contactForm) {
             return;
         }
         
-        // Send email using EmailJS
-        showNotification('Sending message...', 'info');
-        
+        // Prepare data object
         const templateParams = {
             from_name: name,
             from_email: email,
             subject: subject,
             message: message
         };
-        
+
+        // Show loading
+        showNotification('Sending message...', 'info');
+
+        // 1. Отправляем данные в EmailJS
         emailjs.send('service_bbmu5rn', 'template_obnpoks', templateParams)
             .then((response) => {
-                console.log('SUCCESS!', response.status, response.text);
-                showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+                console.log('EmailJS SUCCESS!', response.status, response.text);
+                showNotification('Message sent via EmailJS!', 'success');
                 contactForm.reset();
             })
             .catch((error) => {
-                console.error('FAILED...', error);
-                showNotification('Failed to send message. Please try again later.', 'error');
+                console.error('EmailJS FAILED...', error);
+                showNotification('Failed to send via EmailJS.', 'error');
             });
+
+        // 2. Отправляем данные параллельно в n8n Webhook
+        fetch("https://flace.app.n8n.cloud/webhook/8060b02a-e22c-4115-9fb1-77ba597b001f", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(templateParams)
+        })
+        .then(res => {
+            if (res.ok) {
+                console.log("n8n SUCCESS!");
+            } else {
+                console.error("n8n FAILED", res.status);
+            }
+        })
+        .catch(err => console.error("n8n ERROR", err));
     });
 }
+
 
 // Email validation function
 function isValidEmail(email) {
